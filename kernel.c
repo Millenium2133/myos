@@ -129,12 +129,15 @@ void kernel_main(void)
 	// Yo its my own dependencies
 	gdt_init();
 	idt_init();
-	//Testing the IDT
-	int x = 1/0;
+
 
 	// Initialize the terminal interface
 	terminal_initialize();
-	terminal_writestring("Testing testing, 123\nTesing These brand new lines!");
+	// Force IDT
+	asm volatile("int $0x0");
+
+	// this just writes shit
+	terminal_writestring("Testing testing, 123\nI SWEAR TO GOD IF THIS FUCKING IDT BS DOESNT WORK!!");
 
 	// Stops my CPU form running away
 	for(;;)

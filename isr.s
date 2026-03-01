@@ -12,6 +12,7 @@ isr\num:
 .endm
 
 .macro ISR_ERRORCODE num
+.global isr\num
 isr\num:
 	cli
 	push $\num
@@ -57,15 +58,15 @@ ISR_NOERRORCODE 31
 isr_common:
 	pusha
 
-	xor %eax, eax
-	mov %dx, %ax
+	xor %eax, %eax
+	mov %ds, %ax
 	push %eax
 
 	mov $0x10, %ax
 	mov %ax, %ds
 	mov %ax, %es
 	mov %ax, %fs
-	mov %ax, gs
+	mov %ax, %gs
 
 	call isr_handler
 
