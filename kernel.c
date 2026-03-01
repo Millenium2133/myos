@@ -128,7 +128,7 @@ void kernel_main(void)
 
 	// Initialize the terminal interface
 	terminal_initialize();
-	terminal_writestring("Testing testing, 123\nTesing Theese brand new lines!");
+	terminal_writestring("Testing testing, 123\nTesing These brand new lines!");
 
 	// Stops my CPU form running away
 	for(;;)
