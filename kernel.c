@@ -4,7 +4,7 @@
 
 // Compiler check
 #if defined(__linux__)
-#error "You are not using a cress compiler"
+#error "You are not using a cross compiler"
 #endif
 
 #if !defined(__i386__)
