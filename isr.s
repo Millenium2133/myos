@@ -6,8 +6,8 @@ isr\num:
 	cli
 
 	# Pushes dummy error code for consistency
-	push$0
-	push$\num
+	push $0
+	push $\num
 	jmp isr_common
 .endm
 
@@ -35,7 +35,7 @@ ISR_ERRORCODE 11
 ISR_ERRORCODE 12
 ISR_ERRORCODE 13
 ISR_ERRORCODE 14
-ISR_NOERROECODE 15
+ISR_NOERRORCODE 15
 ISR_NOERRORCODE 16
 ISR_ERRORCODE 17
 ISR_NOERRORCODE 18
@@ -57,42 +57,24 @@ ISR_NOERRORCODE 31
 isr_common:
 	pusha
 
-	mov %ds, %ax
+	xor %eax, eax
+	mov %dx, %ax
 	push %eax
 
 	mov $0x10, %ax
 	mov %ax, %ds
 	mov %ax, %es
 	mov %ax, %fs
-	mov %ax, %gs
+	mov %ax, gs
 
 	call isr_handler
-
 
 	pop %eax
 	mov %ax, %ds
 	mov %ax, %es
-	mov $ax, %fs
+	mov %ax, %fs
 	mov %ax, %gs
 
 	popa
-
 	add $8, %esp
-
 	iret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

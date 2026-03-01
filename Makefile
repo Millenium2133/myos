@@ -19,7 +19,7 @@ idt.o: idt.c idt.h
 	$(CC) $(CFLAGS) -c idt.c -o idt.o
 
 idt_flush.o: idt_flush.s
-	$(AS) idt_flush.s -o idt.flush.o
+	$(AS) idt_flush.s -o idt_flush.o
 
 isr.o: isr.s
 	$(AS) isr.s -o isr.o
