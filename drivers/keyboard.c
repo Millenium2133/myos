@@ -1,6 +1,7 @@
 #include "keyboard.h"
 #include "idt.h"
 #include "pic.h"
+#include "shell.h"
 
 static const char scancode_table[128] =
 {
@@ -22,10 +23,6 @@ static  const char scancode_table_shift[128] =
 };
 
 static int shift_pressed = 0;
-
-void terminal_putchar(char c);
-void terminal_backspace(void);
-
 static int extended = 0;
 
 
@@ -61,14 +58,13 @@ static void  keyboard_handler(struct registers regs)
 	}
 
 	// Shift, Enter and "Backspace"
-	// A better backspace will come with the shell once that is made
 	if (scancode == 0x2A || scancode == 0x36) { shift_pressed = 1; return; }
-	if (scancode == 0x1C) { terminal_putchar('\n'); return; }
-	if (scancode == 0x0E) { terminal_backspace(); return; }
+	if (scancode == 0x1C) { shell_handle_char('\n'); return; }
+	if (scancode == 0x0E) { shell_handle_char('\b'); return; }
 
 	char c = shift_pressed ? scancode_table_shift[scancode] : scancode_table[scancode];
 	if (c != 0)
-		terminal_putchar(c);
+		shell_handle_char(c);
 }
 
 void keyboard_init(void)
