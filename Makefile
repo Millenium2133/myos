@@ -6,7 +6,7 @@ CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra \
          -Icpu -Idrivers -Idisplay -Ilib -Ikernel
 
 OBJS = boot.o kernel.o gdt.o gdt_flush.o idt.o idt_flush.o \
-       isr.o pic.o keyboard.o splash.o string.o vga.o
+       isr.o pic.o keyboard.o splash.o string.o vga.o shell.o
 
 GordOS: $(OBJS) boot/linker.ld
 	$(LD) -T boot/linker.ld -o GordOS -ffreestanding -O2 -nostdlib $(OBJS) -lgcc
@@ -14,7 +14,10 @@ GordOS: $(OBJS) boot/linker.ld
 boot.o: boot/boot.s
 	$(AS) boot/boot.s -o boot.o
 
-kernel.o: kernel/kernel.c cpu/gdt.h cpu/idt.h drivers/pic.h drivers/keyboard.h display/vga.h display/splash.h lib/string.h
+shell.o: kernel/shell.c kernel/shell.h display/vga.h lib/string.h
+	$(CC) $(CFLAGS) -c kernel/shell.c - o shell.o
+
+kernel.o: kernel/kernel.c cpu/gdt.h cpu/idt.h drivers/pic.h drivers/keyboard.h display/vga.h display/splash.h lib/string.h kernel/shell.h
 	$(CC) $(CFLAGS) -c kernel/kernel.c -o kernel.o
 
 gdt.o: cpu/gdt.c cpu/gdt.h
@@ -35,7 +38,7 @@ isr.o: cpu/isr.s
 pic.o: drivers/pic.c drivers/pic.h
 	$(CC) $(CFLAGS) -c drivers/pic.c -o pic.o
 
-keyboard.o: drivers/keyboard.c drivers/keyboard.h cpu/idt.h drivers/pic.h
+keyboard.o: drivers/keyboard.c drivers/keyboard.h cpu/idt.h drivers/pic.h kernel/shell.h
 	$(CC) $(CFLAGS) -c drivers/keyboard.c -o keyboard.o
 
 vga.o: display/vga.c display/vga.h lib/string.h drivers/pic.h
