@@ -114,7 +114,7 @@ static void shell_execute(const char* input)
 		cmd_about();
 	else
 	{
-		terminal_writestring("Unknown Commant: ");
+		terminal_writestring("Unknown Command: ");
 		terminal_writestring(input);
 		terminal_putchar('\n');
 	}
