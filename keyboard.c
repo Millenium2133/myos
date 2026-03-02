@@ -11,8 +11,20 @@ static const char scancode_table[128] =
     '*',  0,  ' '
 };
 
+static  const char scancode_table_shift[128] =
+{
+    0,   0,  '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 0,
+    0,  'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', 0,
+    0,  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~',
+    0,  '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 0,
+    '*', 0,  ' ', 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+    0,   0,  '7', '8', '9', '-', '4', '5', '6', '+', '1', '2', '3', '0', '.'
+};
+
+static int shift_pressed = 0;
 
 void terminal_putchar(char c);
+void terminal_backspace(void);
 
 
 static void  keyboard_handler(struct registers regs)
@@ -21,11 +33,31 @@ static void  keyboard_handler(struct registers regs)
 
 	uint8_t scancode = inb(0x60);
 
+	// Key release
 	if (scancode & 0x80)
+	{
+		uint8_t released = scancode & 0x7F;
+		if (released == 0x2A || released == 0x36)
+			shift_pressed = 0;
 		return;
+	}
 
-	char c = scancode_table[scancode];
+	// Shift pressed
+	if (scancode == 0x2A || scancode == 0x36)
+	{
+		shift_pressed = 1;
+		return;
+	}
 
+	// Enter key
+	if (scancode == 0x1C)
+	{
+		terminal_putchar('\n');
+		return;
+	}
+
+	// Norman key
+	char c = shift_pressed ? scancode_table_shift[scancode] : scancode_table[scancode];
 	if (c != 0)
 		terminal_putchar(c);
 }

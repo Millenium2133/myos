@@ -105,6 +105,25 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 	terminal_buffer[index] = vga_entry(c, color);
 }
 
+void terminal_backspace(void)
+{
+	if (terminal_column == 0)
+	{
+		if (terminal_row > 0)
+		{
+			terminal_row--;
+			terminal_column = VGA_WIDTH - 1;
+		}
+	}
+	else
+	{
+		terminal_column--;
+	}
+
+	terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+	update_cursor();
+}
+
 void terminal_putchar(char c)
 {
 	if (c == '\n')
