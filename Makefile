@@ -4,7 +4,7 @@ LD = i686-elf-gcc
 
 CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 
-OBJS = boot.o kernel.o gdt.o gdt_flush.o idt.o idt_flush.o isr.o pic.o keyboard.o
+OBJS = boot.o kernel.o gdt.o gdt_flush.o idt.o idt_flush.o isr.o pic.o keyboard.o splash.o string.o vga.o
 
 GordOS: $(OBJS) linker.ld
 	$(LD) -T linker.ld -o GordOS -ffreestanding -O2 -nostdlib $(OBJS) -lgcc
@@ -33,7 +33,16 @@ keyboard.o: keyboard.c keyboard.h
 boot.o: boot.s
 	$(AS) boot.s -o boot.o
 
-kernel.o: kernel.c gdt.h idt.h pic.h keyboard.h
+splash.o: splash.c splash.h vga.h string.h
+	$(CC) $(CFLAGS) -c splash.c -o splash.o
+
+vga.o: vga.c vga.h string.h pic.h
+	$(CC) $(CFLAGS) -c vga.c -o vga.o
+
+string.o: string.c string.h
+	$(CC) $(CFLAGS) -c string.c -o string.o
+
+kernel.o: kernel.c gdt.h idt.h pic.h keyboard.h splash.h vga.h string.h
 	$(CC) $(CFLAGS) -c kernel.c -o kernel.o
 
 iso: GordOS
