@@ -2,48 +2,50 @@ CC = i686-elf-gcc
 AS = i686-elf-as
 LD = i686-elf-gcc
 
-CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra \
+         -Icpu -Idrivers -Idisplay -Ilib -Ikernel
 
-OBJS = boot.o kernel.o gdt.o gdt_flush.o idt.o idt_flush.o isr.o pic.o keyboard.o splash.o string.o vga.o
+OBJS = boot.o kernel.o gdt.o gdt_flush.o idt.o idt_flush.o \
+       isr.o pic.o keyboard.o splash.o string.o vga.o
 
-GordOS: $(OBJS) linker.ld
-	$(LD) -T linker.ld -o GordOS -ffreestanding -O2 -nostdlib $(OBJS) -lgcc
+GordOS: $(OBJS) boot/linker.ld
+	$(LD) -T boot/linker.ld -o GordOS -ffreestanding -O2 -nostdlib $(OBJS) -lgcc
 
-gdt_flush.o: gdt_flush.s
-	$(AS) gdt_flush.s -o gdt_flush.o
+boot.o: boot/boot.s
+	$(AS) boot/boot.s -o boot.o
 
-gdt.o: gdt.c gdt.h
-	$(CC) $(CFLAGS) -c gdt.c -o gdt.o
+kernel.o: kernel/kernel.c cpu/gdt.h cpu/idt.h drivers/pic.h drivers/keyboard.h display/vga.h display/splash.h lib/string.h
+	$(CC) $(CFLAGS) -c kernel/kernel.c -o kernel.o
 
-idt.o: idt.c idt.h
-	$(CC) $(CFLAGS) -c idt.c -o idt.o
+gdt.o: cpu/gdt.c cpu/gdt.h
+	$(CC) $(CFLAGS) -c cpu/gdt.c -o gdt.o
 
-idt_flush.o: idt_flush.s
-	$(AS) idt_flush.s -o idt_flush.o
+gdt_flush.o: cpu/gdt_flush.s
+	$(AS) cpu/gdt_flush.s -o gdt_flush.o
 
-isr.o: isr.s
-	$(AS) isr.s -o isr.o
+idt.o: cpu/idt.c cpu/idt.h drivers/pic.h
+	$(CC) $(CFLAGS) -c cpu/idt.c -o idt.o
 
-pic.o: pic.c pic.h
-	$(CC) $(CFLAGS) -c pic.c -o pic.o
+idt_flush.o: cpu/idt_flush.s
+	$(AS) cpu/idt_flush.s -o idt_flush.o
 
-keyboard.o: keyboard.c keyboard.h
-	$(CC) $(CFLAGS) -c keyboard.c -o keyboard.o
+isr.o: cpu/isr.s
+	$(AS) cpu/isr.s -o isr.o
 
-boot.o: boot.s
-	$(AS) boot.s -o boot.o
+pic.o: drivers/pic.c drivers/pic.h
+	$(CC) $(CFLAGS) -c drivers/pic.c -o pic.o
 
-splash.o: splash.c splash.h vga.h string.h
-	$(CC) $(CFLAGS) -c splash.c -o splash.o
+keyboard.o: drivers/keyboard.c drivers/keyboard.h cpu/idt.h drivers/pic.h
+	$(CC) $(CFLAGS) -c drivers/keyboard.c -o keyboard.o
 
-vga.o: vga.c vga.h string.h pic.h
-	$(CC) $(CFLAGS) -c vga.c -o vga.o
+vga.o: display/vga.c display/vga.h lib/string.h drivers/pic.h
+	$(CC) $(CFLAGS) -c display/vga.c -o vga.o
 
-string.o: string.c string.h
-	$(CC) $(CFLAGS) -c string.c -o string.o
+splash.o: display/splash.c display/splash.h display/vga.h
+	$(CC) $(CFLAGS) -c display/splash.c -o splash.o
 
-kernel.o: kernel.c gdt.h idt.h pic.h keyboard.h splash.h vga.h string.h
-	$(CC) $(CFLAGS) -c kernel.c -o kernel.o
+string.o: lib/string.c lib/string.h
+	$(CC) $(CFLAGS) -c lib/string.c -o string.o
 
 iso: GordOS
 	mkdir -p isodir/boot/grub
