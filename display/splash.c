@@ -16,19 +16,6 @@ static inline uint8_t make_color(uint8_t fg, uint8_t bg)
 }
 
 
-// centers the shit declatre with it
-static void print_centered(const char* str, int width)
-{
-	int len = 0;
-	while (str[len]) len++;
-
-	int padding = (width - len) / 2;
-	for (int i = 0; i < padding; i++)
-		terminal_putchar(' ');
-
-	terminal_writestring(str);
-	terminal_putchar('\n');
-}
 
 static void print_border(int width)
 {
@@ -85,6 +72,7 @@ void splash_show(void)
 	INDENT(); print_bordered_line("Welcome to GordOS!", box_width);
 	INDENT(); print_bordered_line("The OS that sucks", box_width);
 	INDENT(); print_bordered_line("(For now :3)", box_width);
+	INDENT(); print_bordered_line("Type help to get started", box_width);
 	INDENT(); print_empty_line(box_width);
 	INDENT(); print_border(box_width);
 
