@@ -1,4 +1,4 @@
-# MyOS
+# GordOS
 I am teaching myself OS Development as a hobby, I am by no means a professional.
 
 The end goal of this system is to have a bootable OS that can make, edit and delete direcories and files.
@@ -8,6 +8,10 @@ I may add some other functions later.
 I am reading the OSDev Wiki and YouTube Tutorials to Frankenstein together my own system.
 
 Feel free to modify and add to this repository
+
+# GordOS Is Here!!
+As I get further along with development and after reaching suck a big milestoe (keyboard now writes letters)
+I feel It's only right to give the system the proper name change it deserves.
 
 # HOW TO COMPILE/INSATLL
 LINUX ONLY
@@ -68,17 +72,17 @@ where 'x' is the name of your drive.
 
 "Will you ever change the name from MyOS?"
 
-Probably not. I'm lazy.
+YES! Out with the old and in with the new. GordOS is her!.
 
 
 
-"Why should I use MyOS?"
+"Why should I use GordOS?"
 
 You shouldn't.
 
 
 
-"Why are you making MyOS?"
+"Why are you making GordOS?"
 
 Becaue I feel like it.
 

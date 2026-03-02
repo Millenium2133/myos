@@ -6,8 +6,8 @@ CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 
 OBJS = boot.o kernel.o gdt.o gdt_flush.o idt.o idt_flush.o isr.o pic.o keyboard.o
 
-myos: $(OBJS) linker.ld
-	$(LD) -T linker.ld -o myos -ffreestanding -O2 -nostdlib $(OBJS) -lgcc
+GordOS: $(OBJS) linker.ld
+	$(LD) -T linker.ld -o GordOS -ffreestanding -O2 -nostdlib $(OBJS) -lgcc
 
 gdt_flush.o: gdt_flush.s
 	$(AS) gdt_flush.s -o gdt_flush.o
@@ -36,14 +36,14 @@ boot.o: boot.s
 kernel.o: kernel.c gdt.h idt.h pic.h keyboard.h
 	$(CC) $(CFLAGS) -c kernel.c -o kernel.o
 
-iso: myos
+iso: GordOS
 	mkdir -p isodir/boot/grub
-	cp myos isodir/boot/myos
+	cp GordOS isodir/boot/GordOS
 	cp grub.cfg isodir/boot/grub/grub.cfg
-	grub2-mkrescue -o myos.iso isodir
+	grub2-mkrescue -o GordOS.iso isodir
 
 clean:
-	rm -rf *.o myos myos.iso
+	rm -rf *.o GordOS GordOS.iso
 	rm -rf isodir/
 
 .PHONY: clean iso
