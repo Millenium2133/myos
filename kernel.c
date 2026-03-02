@@ -6,6 +6,7 @@
 #include "gdt.h"
 #include "idt.h"
 #include "pic.h"
+#include "keyboard.h"
 
 
 // Compiler check
@@ -140,8 +141,9 @@ void kernel_main(void)
 	// asm volatile("int $0x0");
 
 	// this just writes shit
-	terminal_writestring("Testing testing, 123\nWe are live");
+	terminal_writestring("Testing testing, 123\nWe are live\n");
 
+	keyboard_init();
 	asm volatile("sti");
 
 	// Stops my CPU form running away
