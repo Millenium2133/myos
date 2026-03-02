@@ -56,6 +56,13 @@ static void  keyboard_handler(struct registers regs)
 		return;
 	}
 
+	// THE BACKSPACE I FORGOT TO ADD WTF HOW
+	if (scancode == 0x0E)
+	{
+		terminal_backspace();
+		return;
+	}
+
 	// Norman key
 	char c = shift_pressed ? scancode_table_shift[scancode] : scancode_table[scancode];
 	if (c != 0)
