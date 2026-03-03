@@ -14,7 +14,7 @@ static int history_index = -1;
 static int cursor_pos = 0;
 
 // Forward declamations form via.c
-void terminal_restring(const char* data);
+void terminal_writestring(const char* data);
 void terminal_putchar(char c);
 void terminal_backspace(void);
 void terminal_setcolor(uint8_t color);
@@ -283,7 +283,7 @@ void shell_init(void)
 {
 	input_index = 0;
 	cursor_pos = 0;
-	history_index = 1;
+	history_index = -1;
 	shell_prompt();
 }
 

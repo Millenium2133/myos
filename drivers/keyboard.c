@@ -12,7 +12,7 @@ static const char scancode_table[128] =
     '*',  0,  ' '
 };
 
-static  const char scancode_table_shift[128] =
+static const char scancode_table_shift[128] =
 {
     0,   0,  '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 0,
     0,  'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', 0,
@@ -25,54 +25,50 @@ static  const char scancode_table_shift[128] =
 static int shift_pressed = 0;
 static int extended = 0;
 
-
-static void  keyboard_handler(struct registers regs)
+static void keyboard_handler(struct registers regs)
 {
-	(void)regs;
+    (void)regs;
 
-	// Extended scancode prefix
-	uint8_t scancode = inb(0x60);
+    uint8_t scancode = inb(0x60);
 
-	if (scancode == 0xE0)
-	{
-		extended = 1;
-		return;
-	}
+    if (scancode == 0xE0)
+    {
+        extended = 1;
+        return;
+    }
 
-	// Key release
-	if (scancode & 0x80)
-	{
-		uint8_t released = scancode & 0x7F;
-		if (!extended && (released == 0x2A || released == 0x36))
-			shift_pressed = 0;
-		extended = 0;
-		return;
-	}
+    if (scancode & 0x80)
+    {
+        uint8_t released = scancode & 0x7F;
+        if (!extended && (released == 0x2A || released == 0x36))
+            shift_pressed = 0;
+        extended = 0;
+        return;
+    }
 
+    if (extended)
+    {
+        extended = 0;
+        switch (scancode)
+        {
+            case 0x48: shell_handle_char(KEY_UP);    return;
+            case 0x50: shell_handle_char(KEY_DOWN);  return;
+            case 0x4B: shell_handle_char(KEY_LEFT);  return;
+            case 0x4D: shell_handle_char(KEY_RIGHT); return;
+        }
+        return;
+    }
 
-	// If extended scancode
-	if (extended)
-	switch (scancode)
-	{
-		case 0x48: shell_handle_char(KEY_UP); return;
-		case 0x50: shell_handle_char(KEY_DOWN); return;
-		case 0x4B: shell_handle_char(KEY_LEFT); return;
-		case 0x4D: shell_handle_char(KEY_RIGHT); return;
+    if (scancode == 0x2A || scancode == 0x36) { shift_pressed = 1; return; }
+    if (scancode == 0x1C) { shell_handle_char('\n'); return; }
+    if (scancode == 0x0E) { shell_handle_char('\b'); return; }
 
-	}
-	return;
-
-	// Shift, Enter and "Backspace"
-	if (scancode == 0x2A || scancode == 0x36) { shift_pressed = 1; return; }
-	if (scancode == 0x1C) { shell_handle_char('\n'); return; }
-	if (scancode == 0x0E) { shell_handle_char('\b'); return; }
-
-	char c = shift_pressed ? scancode_table_shift[scancode] : scancode_table[scancode];
-	if (c != 0)
-		shell_handle_char(c);
+    char c = shift_pressed ? scancode_table_shift[scancode] : scancode_table[scancode];
+    if (c != 0)
+        shell_handle_char(c);
 }
 
 void keyboard_init(void)
 {
-	irq_register(1, keyboard_handler);
+    irq_register(1, keyboard_handler);
 }
