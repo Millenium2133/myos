@@ -49,13 +49,18 @@ static void  keyboard_handler(struct registers regs)
 		return;
 	}
 
-	
+
 	// If extended scancode
 	if (extended)
+	switch (scancode)
 	{
-		extended = 0;
-		return;
+		case 0x48: shell_handle_char(KEY_UP); return;
+		case 0x50: shell_handle_char(KEY_DOWN); return;
+		case 0x4B: shell_handle_char(KEY_LEFT); return;
+		case 0x4D: shell_handle_char(KEY_RIGHT); return;
+
 	}
+	return;
 
 	// Shift, Enter and "Backspace"
 	if (scancode == 0x2A || scancode == 0x36) { shift_pressed = 1; return; }
