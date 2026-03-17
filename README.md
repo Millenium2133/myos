@@ -62,7 +62,7 @@ Development is ongoing but at a reduced pace while I focus on studies and other 
 
 ```bash
 git clone https://github.com/Millenium2133/GordOS.git
-sudo chmod -R 777 GordOS/
+sudo chmod -R $USER:$USER GordOS/
 cd GordOS
 ```
 
