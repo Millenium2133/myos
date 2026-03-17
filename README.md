@@ -8,6 +8,9 @@ I will be taking a break from development, to focus on other things like studies
 Develpment will still be happening, but at a slower pace.
 ---
 
+
+## TODO
+Memory Management, Filesystem (Probably FAT32)
 ## Technical Specifications
 
 ### Build Requirements
