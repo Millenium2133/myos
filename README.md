@@ -32,7 +32,7 @@ Development is ongoing but at a reduced pace while I focus on studies and other 
 | Component | Requirement |
 | :--- | :--- |
 | CPU | 32-bit i686 |
-| RAM | 725 MB minimum (tested) |
+| RAM | 725 MB minimum (tested, could be lower) |
 | Video | VGA text mode |
 | Firmware | BIOS / Legacy boot |
 | Input | PS/2 keyboard (Scan Code Set 1) |
