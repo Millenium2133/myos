@@ -39,7 +39,7 @@ void pic_remap(void)
 
 	//set vector offset
 	outb(PIC1_DATA, 0x20); io_wait();
-	outb(PIC2_DATA, 0x20); io_wait();
+	outb(PIC2_DATA, 0x28); io_wait();
 
 	// Tell PIC's about eachother
 	outb(PIC1_DATA, 0x04); io_wait();
