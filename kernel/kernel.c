@@ -25,8 +25,8 @@
 void kernel_main(void)
 {
 	gdt_init();
-	idt_init();
 	pic_remap();
+	idt_init();
 	terminal_initialize();
 
 	splash_show();
